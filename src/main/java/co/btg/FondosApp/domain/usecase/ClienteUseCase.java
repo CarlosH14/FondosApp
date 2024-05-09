@@ -85,7 +85,8 @@ public class ClienteUseCase implements ClienteRepository {
 
         List<String> fondosVinculados = new ArrayList<>();
         for(String transaccion: transacciones){
-            fondosVinculados.add(fondoUseCase.getFondoByTransaction(transaccion).getFondoId());
+            Fondo fondo = (Fondo) fondoUseCase.getFondoByTransaction(transaccion).getBody();
+            fondosVinculados.add(fondo.getFondoId());
         }
         return new ResponseEntity<>(fondosVinculados, HttpStatus.FOUND);
     }
@@ -95,7 +96,8 @@ public class ClienteUseCase implements ClienteRepository {
         log.info("SAVE NUEVA VINCULACION Cliente: "+clienteId+" Fondo: "+tipoFondo);
         Cliente cliente = (Cliente) getClienteById(clienteId).getBody();
 
-        Integer valor = fondoUseCase.getFondoById(tipoFondo).getMontoMinimoVinculacion();
+        Fondo fondoById = (Fondo) fondoUseCase.getFondoById(tipoFondo).getBody();
+        Integer valor = fondoById.getMontoMinimoVinculacion();
         if(cliente.getSaldo() - valor < 0){
             log.error("FAILED BALANCE NOT ENOUGH");
             return new ResponseEntity<>(new Error("Saldo insuficiente", "El cliente no puede vincularse al fondo debido a saldo insuficiente."), HttpStatus.PAYMENT_REQUIRED);
@@ -137,7 +139,7 @@ public class ClienteUseCase implements ClienteRepository {
             return new ResponseEntity<>(new Error("Fallo al cancelar", "El cliente no tiene una vinculacion activa"), HttpStatus.NOT_FOUND);
         }
 
-        Fondo fondo = fondoUseCase.getFondoByTransaction(vinculacionId);
+        Fondo fondo = (Fondo) fondoUseCase.getFondoByTransaction(vinculacionId).getBody();
 
         FondoCliente nuevaVinculacion = new FondoCliente();
         nuevaVinculacion.setClienteId(cliente.getClienteId());
@@ -180,9 +182,10 @@ public class ClienteUseCase implements ClienteRepository {
         }
 
         for (FondoCliente fondo : scanResult) {
+            Fondo fondoById = (Fondo) fondoUseCase.getFondoById(fondo.getFondoId()).getBody();
             listaVinculos.add(
                     new Vinculo(
-                            fondoUseCase.getFondoById(fondo.getFondoId()).getNombreFondo(),
+                            fondoById.getNombreFondo(),
                             fondo.getVinculo(),
                             fondo.getFechaActualizacion()
                     )

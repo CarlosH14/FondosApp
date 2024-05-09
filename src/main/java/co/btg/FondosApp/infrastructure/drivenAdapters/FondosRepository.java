@@ -2,16 +2,17 @@ package co.btg.FondosApp.infrastructure.drivenAdapters;
 
 import co.btg.FondosApp.domain.model.Fondo;
 import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 @EnableScan
 public interface FondosRepository {
-    Fondo saveFondo(Fondo fondo);
-    Fondo getFondoById(String fondoId);
-    String delete(String fondoId);
-    String update(String fondoId, Fondo fondo);
-    List<Fondo> getAllFondos();
+    ResponseEntity saveFondo(Fondo fondo);
+    ResponseEntity getFondoById(String fondoId);
+    ResponseEntity delete(String fondoId);
+    ResponseEntity update(String fondoId, Fondo fondo);
+    ResponseEntity getAllFondos();
 
-    Fondo getFondoByTransaction(String transactionId);
+    ResponseEntity getFondoByTransaction(String transactionId);
 }
