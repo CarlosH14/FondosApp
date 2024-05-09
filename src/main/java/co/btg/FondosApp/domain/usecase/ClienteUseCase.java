@@ -1,0 +1,194 @@
+package co.btg.FondosApp.domain.usecase;
+
+import co.btg.FondosApp.application.config.Error;
+import co.btg.FondosApp.domain.model.Cliente;
+import co.btg.FondosApp.domain.model.Fondo;
+import co.btg.FondosApp.domain.model.FondoCliente;
+import co.btg.FondosApp.domain.model.Vinculo;
+import co.btg.FondosApp.infrastructure.drivenAdapters.ClienteRepository;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+
+@Repository
+public class ClienteUseCase implements ClienteRepository {
+
+    private static final Logger log = LogManager.getLogger(ClienteUseCase.class);
+    @Autowired
+    private DynamoDBMapper dynamoDBMapper;
+
+    @Autowired
+    private FondoUseCase fondoUseCase;
+
+    @Override
+    public ResponseEntity saveCliente(Cliente cliente) {
+        dynamoDBMapper.save(cliente);
+        log.info("SAVED NEW Cliente: "+cliente.getClienteId());
+        return new ResponseEntity(cliente, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity getClienteById(String clienteId){
+        log.info("GET Cliente: "+clienteId);
+        try {
+            Cliente cliente = dynamoDBMapper.load(Cliente.class, clienteId);
+            log.info("FOUND");
+            return new ResponseEntity(cliente, HttpStatus.FOUND);
+        }catch (Exception e){
+            log.error("NOT FOUND");
+            return new ResponseEntity<>(new Error("Cliente no encontrado", "El cliente con el id "+clienteId+" no se encontró"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ResponseEntity updateCliente(String clienteId, Cliente cliente) {
+        log.info("UPDATE Cliente: "+clienteId);
+        try{
+            dynamoDBMapper.save(cliente,
+                    new DynamoDBSaveExpression()
+                            .withExpectedEntry("clienteId",
+                                    new ExpectedAttributeValue(
+                                            new AttributeValue().withS(clienteId)
+                                    )));
+            log.info("SUCCESS");
+            return new ResponseEntity<>(clienteId, HttpStatus.OK);
+        }catch (Exception e){
+            log.error("FAILED");
+            return new ResponseEntity(new Error("Fallo al actualizar", "No se pudo actualizar la info del cliente: "+clienteId), HttpStatus.CONFLICT);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getFondosVinculados(String clienteId) {
+        log.info("GET FONDOS VINCULADOS Cliente: "+clienteId);
+        List<String> transacciones = new ArrayList<>();
+        try{
+            transacciones = dynamoDBMapper.load(Cliente.class, clienteId).getVinculacionesActivas();
+            log.info("SUCCESS");
+        }catch (Exception e){
+            log.error("FAILED");
+            return new ResponseEntity<>(new Error("Fallo al obtener vinculaciones", "No se pudieron obtener las vinculaciones activas del cliente: "+clienteId), HttpStatus.NOT_FOUND);
+        }
+
+        List<String> fondosVinculados = new ArrayList<>();
+        for(String transaccion: transacciones){
+            fondosVinculados.add(fondoUseCase.getFondoByTransaction(transaccion).getFondoId());
+        }
+        return new ResponseEntity<>(fondosVinculados, HttpStatus.FOUND);
+    }
+
+    @Override
+    public ResponseEntity<?> saveNuevaVinculacion(String clienteId, String tipoFondo) {
+        log.info("SAVE NUEVA VINCULACION Cliente: "+clienteId+" Fondo: "+tipoFondo);
+        Cliente cliente = (Cliente) getClienteById(clienteId).getBody();
+
+        Integer valor = fondoUseCase.getFondoById(tipoFondo).getMontoMinimoVinculacion();
+        if(cliente.getSaldo() - valor < 0){
+            log.error("FAILED BALANCE NOT ENOUGH");
+            return new ResponseEntity<>(new Error("Saldo insuficiente", "El cliente no puede vincularse al fondo debido a saldo insuficiente."), HttpStatus.PAYMENT_REQUIRED);
+        }
+        for(String fondo: (List<String>) getFondosVinculados(cliente.getClienteId()).getBody()){
+            if(fondo.equals(tipoFondo))
+                log.error("FAILED ALREADY LINKED");
+                return new ResponseEntity<>(new Error("Ya vinculado", "El cliente no puede vincularse al fondo debido a que ya se encuenta vinculado."), HttpStatus.CONFLICT);
+        }
+        
+        FondoCliente nuevaVinculacion = new FondoCliente();
+        nuevaVinculacion.setClienteId(cliente.getClienteId());
+        nuevaVinculacion.setFondoId(tipoFondo);
+        nuevaVinculacion.setVinculo(Boolean.TRUE);
+        nuevaVinculacion.setFechaActualizacion(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        try{
+            dynamoDBMapper.save(nuevaVinculacion);
+        }catch (Exception e){
+            return new ResponseEntity<>(new Error("Fallo al guardar", "No se pudo guardar la vinculación del cliente"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        cliente.setSaldo(cliente.getSaldo()-valor);
+        List<String> vinculaciones = cliente.getVinculacionesActivas();
+        vinculaciones.add(nuevaVinculacion.getTransactionId());
+        cliente.setVinculacionesActivas(vinculaciones);
+        updateCliente(cliente.getClienteId(), cliente);
+
+        log.info("SUCCESS LINKING Transaction: "+nuevaVinculacion.getTransactionId());
+        return new ResponseEntity<>(nuevaVinculacion, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> saveNuevaCancelacion(String clienteId, String vinculacionId){
+        log.info("SAVE NUEVA CANCELACION Cliente: "+clienteId+" Transaction: "+vinculacionId);
+
+        Cliente cliente = (Cliente) getClienteById(clienteId).getBody();
+
+        if(!cliente.getVinculacionesActivas().contains(vinculacionId)){
+            return new ResponseEntity<>(new Error("Fallo al cancelar", "El cliente no tiene una vinculacion activa"), HttpStatus.NOT_FOUND);
+        }
+
+        Fondo fondo = fondoUseCase.getFondoByTransaction(vinculacionId);
+
+        FondoCliente nuevaVinculacion = new FondoCliente();
+        nuevaVinculacion.setClienteId(cliente.getClienteId());
+        nuevaVinculacion.setFondoId(fondo.getFondoId());
+        nuevaVinculacion.setVinculo(Boolean.FALSE);
+        nuevaVinculacion.setFechaActualizacion(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        try{
+            dynamoDBMapper.save(nuevaVinculacion);
+        }catch (Exception e){
+            return new ResponseEntity<>(new Error("Fallo al guardar", "No se pudo guardar la cancelación del cliente"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        cliente.setSaldo(cliente.getSaldo()+fondo.getMontoMinimoVinculacion());
+        List<String> vinculaciones = cliente.getVinculacionesActivas();
+        vinculaciones.remove(vinculacionId);
+        cliente.setVinculacionesActivas(vinculaciones);
+        updateCliente(cliente.getClienteId(), cliente);
+
+        log.info("SUCCESS UNLINKING Transaction: "+nuevaVinculacion.getTransactionId());
+        return new ResponseEntity<>(nuevaVinculacion, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity getHistoricoVinculaciones(String clienteId) {
+
+        Cliente cliente = (Cliente) getClienteById(clienteId).getBody();
+
+        List<Vinculo> listaVinculos = new ArrayList<>();
+
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":val1", new AttributeValue().withS(cliente.getClienteId()));
+        List<FondoCliente> scanResult = new ArrayList<>();
+
+        try{
+            scanResult = dynamoDBMapper.scan(FondoCliente.class, new DynamoDBScanExpression()
+                    .withFilterExpression("clienteId = :val1")
+                    .withExpressionAttributeValues(eav));
+        }catch (Exception e){
+            return new ResponseEntity<>(new Error("Fallo al consultar", "No se pudo obtener el historial de transacciones del cliente: "+clienteId), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        for (FondoCliente fondo : scanResult) {
+            listaVinculos.add(
+                    new Vinculo(
+                            fondoUseCase.getFondoById(fondo.getFondoId()).getNombreFondo(),
+                            fondo.getVinculo(),
+                            fondo.getFechaActualizacion()
+                    )
+            );
+        }
+
+        return new ResponseEntity(listaVinculos, HttpStatus.OK);
+    }
+}

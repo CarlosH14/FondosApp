@@ -1,5 +1,19 @@
+Crear tabla de Fondos en DynamoDB Local
 aws dynamodb create-table --table-name Fondos --attribute-definitions AttributeName=fondoId,AttributeType=S --key-schema AttributeName=fondoId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1  --endpoint-url http://localhost:8000
 
+Crear tabla de Cliente en DynamoDB Local
+aws dynamodb create-table --table-name Clientes --attribute-definitions AttributeName=clienteId,AttributeType=S --key-schema AttributeName=clienteId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1  --endpoint-url http://localhost:8000
+
+Crear tabla FondoCliente en DynamoDB Local
+aws dynamodb create-table --table-name FondoCliente --attribute-definitions AttributeName=transactionId,AttributeType=S --key-schema AttributeName=transactionId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1  --endpoint-url http://localhost:8000
+
+Listar tablas de DynamoDB Local
 aws dynamodb list-tables --endpoint-url http://localhost:8000
 
+Eliminar tablas
+aws dynamodb delete-table --table-name FondoCliente --endpoint-url http://localhost:8000
+aws dynamodb delete-table --table-name Fondos --endpoint-url http://localhost:8000
+aws dynamodb delete-table --table-name Clientes --endpoint-url http://localhost:8000
+
+Directorio de Windows en Ubuntu WSL
 cd /mnt/c

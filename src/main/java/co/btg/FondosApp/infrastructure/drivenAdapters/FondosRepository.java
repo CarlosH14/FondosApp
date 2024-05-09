@@ -11,5 +11,7 @@ public interface FondosRepository {
     Fondo getFondoById(String fondoId);
     String delete(String fondoId);
     String update(String fondoId, Fondo fondo);
-    List<Fondo> getAllFondosFPV();
+    List<Fondo> getAllFondos();
+
+    Fondo getFondoByTransaction(String transactionId);
 }

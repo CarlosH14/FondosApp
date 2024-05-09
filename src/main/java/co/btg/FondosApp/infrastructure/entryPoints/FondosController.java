@@ -1,7 +1,7 @@
 package co.btg.FondosApp.infrastructure.entryPoints;
 
 import co.btg.FondosApp.domain.model.Fondo;
-import co.btg.FondosApp.infrastructure.drivenAdapters.FondosRepositoryImpl;
+import co.btg.FondosApp.domain.usecase.FondoUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class FondosController {
 
     @Autowired
-    private FondosRepositoryImpl fondosRepository;
+    private FondoUseCase fondosRepository;
 
     @PostMapping("/fondo")
     public Fondo saveFondo(@RequestBody Fondo fondo) {
@@ -23,9 +23,9 @@ public class FondosController {
         return fondosRepository.getFondoById(fondoId);
     }
 
-    @GetMapping("/fondo/fpv")
+    @GetMapping("/fondos")
     public List<Fondo> getAllFondosFPV() {
-        return fondosRepository.getAllFondosFPV();
+        return fondosRepository.getAllFondos();
     }
 
     @DeleteMapping("/fondo/{id}")

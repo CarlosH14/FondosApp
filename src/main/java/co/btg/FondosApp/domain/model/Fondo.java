@@ -19,7 +19,7 @@ public class Fondo {
     private String categoriaFondo;
 
     @DynamoDBAttribute
-    private String montoMinimoVinculacion;
+    private Integer montoMinimoVinculacion;
 
     @DynamoDBAttribute
     private String nombreFondo;

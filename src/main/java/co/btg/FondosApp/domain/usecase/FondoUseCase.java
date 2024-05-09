@@ -1,6 +1,8 @@
-package co.btg.FondosApp.infrastructure.drivenAdapters;
+package co.btg.FondosApp.domain.usecase;
 
 import co.btg.FondosApp.domain.model.Fondo;
+import co.btg.FondosApp.domain.model.FondoCliente;
+import co.btg.FondosApp.infrastructure.drivenAdapters.FondosRepository;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class FondosRepositoryImpl implements FondosRepository{
+public class FondoUseCase implements FondosRepository {
 
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
@@ -33,7 +35,7 @@ public class FondosRepositoryImpl implements FondosRepository{
     public String delete(String fondoId) {
         Fondo emp = dynamoDBMapper.load(Fondo.class, fondoId);
         dynamoDBMapper.delete(emp);
-        return "Employee Deleted!";
+        return "Fondo Deleted!";
     }
 
     public String update(String fondoId, Fondo fondo) {
@@ -47,19 +49,20 @@ public class FondosRepositoryImpl implements FondosRepository{
     }
 
     @Override
-    public List<Fondo> getAllFondosFPV() {
+    public List<Fondo> getAllFondos() {
 
-        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":val1", new AttributeValue().withS("FPV"));
-
-        List<Fondo> scanResult = dynamoDBMapper.scan(Fondo.class, new DynamoDBScanExpression()
-                .withFilterExpression("categoriaFondo = :val1")
-                .withExpressionAttributeValues(eav));
+        List<Fondo> scanResult = dynamoDBMapper.scan(Fondo.class, new DynamoDBScanExpression());
 
         for (Fondo fondo : scanResult) {
             System.out.println(fondo.getNombreFondo());
         }
 
         return scanResult;
+    }
+
+    @Override
+    public Fondo getFondoByTransaction(String transactionId) {
+        FondoCliente transaction = dynamoDBMapper.load(FondoCliente.class, transactionId);
+        return dynamoDBMapper.load(Fondo.class, transaction.getFondoId());
     }
 }
