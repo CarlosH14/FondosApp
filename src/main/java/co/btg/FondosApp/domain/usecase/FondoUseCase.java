@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Repository
 public class FondoUseCase implements FondosRepository {
@@ -37,44 +38,38 @@ public class FondoUseCase implements FondosRepository {
 
     public ResponseEntity getFondoById(String fondoId) {
         log.info("GET Fondo: "+fondoId);
-        try {
-            Fondo fondo = dynamoDBMapper.load(Fondo.class, fondoId);
-            log.info("FOUND");
-            return new ResponseEntity(fondo, HttpStatus.FOUND);
-        }catch (Exception e){
+        Fondo fondo = dynamoDBMapper.load(Fondo.class, fondoId);
+        if(Objects.isNull(fondo)){
             log.error("NOT FOUND");
             return new ResponseEntity<>(new Error("Fondo no encontrado", "El fondo con el id "+fondoId+" no se encontró"), HttpStatus.NOT_FOUND);
+        }else{
+            log.info("FOUND");
+            return new ResponseEntity(fondo, HttpStatus.FOUND);
         }
     }
 
     public ResponseEntity delete(String fondoId) {
         log.info("DELETE Fondo: "+fondoId);
-        try {
-            Fondo fondo = dynamoDBMapper.load(Fondo.class, fondoId);
+        Fondo fondo = dynamoDBMapper.load(Fondo.class, fondoId);
+        if(Objects.isNull(fondo)){
+            log.error("NOT FOUND");
+            return new ResponseEntity<>(new Error("Fondo no encontrado", "El fondo con el id "+fondoId+" no se encontró"), HttpStatus.NOT_FOUND);
+        }else{
             dynamoDBMapper.delete(fondo);
             log.info("DELETED");
             return new ResponseEntity("Fondo Deleted!", HttpStatus.FOUND);
-        }catch (Exception e){
-            log.error("NOT FOUND");
-            return new ResponseEntity<>(new Error("Fondo no encontrado", "El fondo con el id "+fondoId+" no se encontró"), HttpStatus.NOT_FOUND);
         }
     }
 
     public ResponseEntity update(String fondoId, Fondo fondo) {
         log.info("UPDATE Fondo: "+fondoId);
-        try{
-            dynamoDBMapper.save(fondo,
-                    new DynamoDBSaveExpression()
+        dynamoDBMapper.save(fondo, new DynamoDBSaveExpression()
                             .withExpectedEntry("fondoId",
                                     new ExpectedAttributeValue(
                                             new AttributeValue().withS(fondoId)
                                     )));
-            log.info("SUCCESS");
-            return new ResponseEntity<>(fondoId, HttpStatus.OK);
-        }catch (Exception e){
-            log.error("FAILED");
-            return new ResponseEntity(new Error("Fallo al actualizar", "No se pudo actualizar la info del Fondo: "+fondoId), HttpStatus.CONFLICT);
-        }
+        log.info("SUCCESS");
+        return new ResponseEntity<>(fondoId, HttpStatus.OK);
     }
 
     @Override
