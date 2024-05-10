@@ -38,7 +38,7 @@ public class ClientesController {
     }
 
     @PostMapping("/cliente/{id}/nueva")
-    public ResponseEntity saveNuevaVinculacion(@PathVariable("id") String clienteId, @RequestParam("fondo") String fondoId) {
+    public ResponseEntity<?> saveNuevaVinculacion(@PathVariable("id") String clienteId, @RequestParam("fondo") String fondoId) {
         return clienteRepository.saveNuevaVinculacion(
                 clienteId,
                 fondoId

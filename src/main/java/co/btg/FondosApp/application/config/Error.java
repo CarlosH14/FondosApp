@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+@Data
 @AllArgsConstructor
-public class Error extends Exception{
+public class Error{
     private String error;
     private String message;
 }

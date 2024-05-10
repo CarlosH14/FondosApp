@@ -97,11 +97,12 @@ public class ClienteUseCase implements ClienteRepository {
             log.error("FAILED BALANCE NOT ENOUGH");
             return new ResponseEntity<>(new Error("Saldo insuficiente", "El cliente no puede vincularse al fondo debido a saldo insuficiente."), HttpStatus.PAYMENT_REQUIRED);
         }
-        for(String fondo: (List<String>) getFondosVinculados(cliente.getClienteId()).getBody()){
-            if(fondo.equals(tipoFondo))
+        ResponseEntity<List<Fondo>> listaFondo = getFondosVinculados(cliente.getClienteId());
+            if(listaFondo.getBody().contains(tipoFondo)){
                 log.error("FAILED ALREADY LINKED");
                 return new ResponseEntity<>(new Error("Ya vinculado", "El cliente no puede vincularse al fondo debido a que ya se encuenta vinculado."), HttpStatus.CONFLICT);
-        }
+            }
+
         
         FondoCliente nuevaVinculacion = new FondoCliente();
         nuevaVinculacion.setClienteId(cliente.getClienteId());
