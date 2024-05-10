@@ -50,8 +50,7 @@ jacocoTestReport {
 	}
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: ['co/btg/application/**',
-										'co/btg/insfrastructure/**'])
+			fileTree(dir: it, exclude: ['co/btg/FondosApp/infrastructure/**'])
 		}))
 	}
 }

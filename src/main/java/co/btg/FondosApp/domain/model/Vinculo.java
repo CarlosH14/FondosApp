@@ -1,10 +1,8 @@
 package co.btg.FondosApp.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
-
 
 @AllArgsConstructor
 public class Vinculo {

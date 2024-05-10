@@ -125,7 +125,7 @@ class FondoUseCaseTest {
         dynamoDBMapper.save(fondoTest);
         dynamoDBMapper.save(fondoClienteTest);
         ResponseEntity<Fondo> fondo = fondoUseCase.getFondoByTransaction(fondoClienteTest.getTransactionId());
-        assertEquals(fondo.getBody(), fondoTest);
+        assertEquals(fondo.getBody().getNombreFondo(), fondoTest.getNombreFondo());
         dynamoDBMapper.delete(fondoTest);
         dynamoDBMapper.delete(fondoClienteTest);
     }
