@@ -1,0 +1,870 @@
+{
+	"info": {
+		"_postman_id": "79011a83-6863-46ba-b794-29ec2f779f0d",
+		"name": "Prueba Técnica REST Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24887734"
+	},
+	"item": [
+		{
+			"name": "Fondos",
+			"item": [
+				{
+					"name": "Save Fondo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoriaFondo\": \"FIC\",\r\n        \"montoMinimoVinculacion\": 50000,\r\n        \"nombreFondo\": \"DEUDAPRIVADA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/fondo",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"fondo"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Save Fondo",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"categoriaFondo\": \"FPV\",\r\n    \"montoMinimoVinculacion\": 100000,\r\n    \"nombreFondo\": \"FPV_BTG_PACTUAL_DINAMICA\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/fondo",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"fondo"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:18:22 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"fondoId\": \"f2958754-ac60-4b77-91c9-b072b7b86ee7\",\n    \"categoriaFondo\": \"FPV\",\n    \"montoMinimoVinculacion\": 100000,\n    \"nombreFondo\": \"FPV_BTG_PACTUAL_DINAMICA\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Fondos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/fondos",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"fondos"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Fondos",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/fondos",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"fondos"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:19:51 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"fondoId\": \"f2958754-ac60-4b77-91c9-b072b7b86ee7\",\n        \"categoriaFondo\": \"FPV\",\n        \"montoMinimoVinculacion\": 100000,\n        \"nombreFondo\": \"FPV_BTG_PACTUAL_DINAMICA\"\n    },\n    {\n        \"fondoId\": \"737004c0-4c50-468d-9372-10986025196a\",\n        \"categoriaFondo\": \"FPV\",\n        \"montoMinimoVinculacion\": 75000,\n        \"nombreFondo\": \"FPV_BTG_PACTUAL_RECAUDADORA\"\n    },\n    {\n        \"fondoId\": \"cf97b1a9-3103-44d9-a2a2-5bb1cde8a47e\",\n        \"categoriaFondo\": \"FPV\",\n        \"montoMinimoVinculacion\": 125000,\n        \"nombreFondo\": \"FPV_BTG_PACTUAL_ECOPETROL\"\n    },\n    {\n        \"fondoId\": \"2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d\",\n        \"categoriaFondo\": \"FIC\",\n        \"montoMinimoVinculacion\": 250000,\n        \"nombreFondo\": \"FDO-ACCIONES\"\n    },\n    {\n        \"fondoId\": \"1f2e6299-912b-49be-ab3a-64f32a03fc42\",\n        \"categoriaFondo\": \"FIC\",\n        \"montoMinimoVinculacion\": 50000,\n        \"nombreFondo\": \"DEUDAPRIVADA\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Fondo by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/fondo/2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"fondo",
+								"2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Fondo by Id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/fondo/2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"fondo",
+										"2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d"
+									]
+								}
+							},
+							"status": "Found",
+							"code": 302,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:20:10 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"fondoId\": \"2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d\",\n    \"categoriaFondo\": \"FIC\",\n    \"montoMinimoVinculacion\": 250000,\n    \"nombreFondo\": \"FDO-ACCIONES\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Fondo by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/fondo/9e84c49d-0d6d-49b5-9694-96c6ed546e8f",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"fondo",
+								"9e84c49d-0d6d-49b5-9694-96c6ed546e8f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "Save Cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Leo\",\r\n    \"apellido\": \"Messi\",\r\n    \"saldo\": 500000,\r\n    \"vinculacionesActivas\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/cliente",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Save Cliente",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nombre\": \"Leo\",\r\n    \"apellido\": \"Messi\",\r\n    \"saldo\": 500000,\r\n    \"vinculacionesActivas\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/cliente",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"cliente"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:21:27 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"clienteId\": \"6ea9af8f-b49a-4d5d-9a9c-f9966430d260\",\n    \"nombre\": \"Leo\",\n    \"apellido\": \"Messi\",\n    \"saldo\": 500000,\n    \"vinculacionesActivas\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Cliente by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"6ea9af8f-b49a-4d5d-9a9c-f9966430d260"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Cliente by Id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"cliente",
+										"6ea9af8f-b49a-4d5d-9a9c-f9966430d260"
+									]
+								}
+							},
+							"status": "Found",
+							"code": 302,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:31:20 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"clienteId\": \"6ea9af8f-b49a-4d5d-9a9c-f9966430d260\",\n    \"nombre\": \"Leo\",\n    \"apellido\": \"Messi\",\n    \"saldo\": 250000,\n    \"vinculacionesActivas\": [\n        \"1db278bb-33dd-4af3-8119-0ee8a376b468\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Save Nueva Vinculacion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/nueva?fondo=cf97b1a9-3103-44d9-a2a2-5bb1cde8a47e",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+								"nueva"
+							],
+							"query": [
+								{
+									"key": "fondo",
+									"value": "cf97b1a9-3103-44d9-a2a2-5bb1cde8a47e"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Save Nueva Vinculacion",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/nueva?fondo=2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"cliente",
+										"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+										"nueva"
+									],
+									"query": [
+										{
+											"key": "fondo",
+											"value": "2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:22:07 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"transactionId\": \"1db278bb-33dd-4af3-8119-0ee8a376b468\",\n    \"fondoId\": \"2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d\",\n    \"clienteId\": \"6ea9af8f-b49a-4d5d-9a9c-f9966430d260\",\n    \"fechaActualizacion\": \"2024-05-10T05:22:07.383+00:00\",\n    \"vinculo\": true\n}"
+						},
+						{
+							"name": "Save Nueva Vinculacion Already",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/nueva?fondo=2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"cliente",
+										"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+										"nueva"
+									],
+									"query": [
+										{
+											"key": "fondo",
+											"value": "2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d"
+										}
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:30:15 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Ya vinculado\",\n    \"message\": \"El cliente no puede vincularse al fondo debido a que ya se encuenta vinculado.\"\n}"
+						},
+						{
+							"name": "Save Nueva Vinculacion Saldo",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/nueva?fondo=cf97b1a9-3103-44d9-a2a2-5bb1cde8a47e",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"cliente",
+										"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+										"nueva"
+									],
+									"query": [
+										{
+											"key": "fondo",
+											"value": "cf97b1a9-3103-44d9-a2a2-5bb1cde8a47e"
+										}
+									]
+								}
+							},
+							"status": "Payment Required",
+							"code": 402,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:39:48 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Saldo insuficiente\",\n    \"message\": \"El cliente no puede vincularse al fondo debido a saldo insuficiente.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Save Nueva Cancelacion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/cancel?transaction=1db278bb-33dd-4af3-8119-0ee8a376b468",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+								"cancel"
+							],
+							"query": [
+								{
+									"key": "transaction",
+									"value": "1db278bb-33dd-4af3-8119-0ee8a376b468"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Save Nueva Cancelacion Fallo",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/cancel?transaction=2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"cliente",
+										"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+										"cancel"
+									],
+									"query": [
+										{
+											"key": "transaction",
+											"value": "2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:41:22 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Fallo al cancelar\",\n    \"message\": \"El cliente no tiene una vinculacion activa\"\n}"
+						},
+						{
+							"name": "Save Nueva Cancelacion",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/cancel?transaction=1db278bb-33dd-4af3-8119-0ee8a376b468",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"cliente",
+										"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+										"cancel"
+									],
+									"query": [
+										{
+											"key": "transaction",
+											"value": "1db278bb-33dd-4af3-8119-0ee8a376b468"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:41:56 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"transactionId\": \"0b987141-e520-4342-99b8-f8cd2cf94d1a\",\n    \"fondoId\": \"2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d\",\n    \"clienteId\": \"6ea9af8f-b49a-4d5d-9a9c-f9966430d260\",\n    \"fechaActualizacion\": \"2024-05-10T05:41:56.532+00:00\",\n    \"vinculo\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Cliente Vinculaciones",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/vinculaciones",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+								"vinculaciones"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Cliente Vinculaciones",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/vinculaciones",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"cliente",
+										"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+										"vinculaciones"
+									]
+								}
+							},
+							"status": "Found",
+							"code": 302,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:31:40 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    \"2a5d3b2e-aa8f-469c-bba1-3c5923bc5d1d\"\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Cliente Historico Vinculaciones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/historico",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+								"historico"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Cliente Historico Vinculaciones",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/cliente/6ea9af8f-b49a-4d5d-9a9c-f9966430d260/historico",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"cliente",
+										"6ea9af8f-b49a-4d5d-9a9c-f9966430d260",
+										"historico"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 May 2024 05:42:09 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"nombreFondo\": \"FDO-ACCIONES\",\n        \"vinculado\": true,\n        \"fechaVinculacion\": \"2024-05-10T05:22:07.383+00:00\"\n    },\n    {\n        \"nombreFondo\": \"FPV_BTG_PACTUAL_RECAUDADORA\",\n        \"vinculado\": true,\n        \"fechaVinculacion\": \"2024-05-10T05:39:33.813+00:00\"\n    },\n    {\n        \"nombreFondo\": \"FPV_BTG_PACTUAL_DINAMICA\",\n        \"vinculado\": true,\n        \"fechaVinculacion\": \"2024-05-10T05:39:06.928+00:00\"\n    },\n    {\n        \"nombreFondo\": \"FDO-ACCIONES\",\n        \"vinculado\": false,\n        \"fechaVinculacion\": \"2024-05-10T05:41:56.532+00:00\"\n    }\n]"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "local",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
